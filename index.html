@@ -63,6 +63,7 @@
     #login input{
       border-radius:10vmin;
       padding:1vmin;
+      max-width:90%;
       background-color:#727a87;
       border:3px #313c47 solid;
       margin-top:3vmin;
@@ -193,11 +194,8 @@ function login(){
 
   }else{
     if(document.getElementById("remember").checked){
-      setCookie("user",user);
-      setCookie("token",token);
-    }else{
-      setCookie("user",user);
-      setCookie("token",token);
+      setCookie("user",user,36500);
+      setCookie("token",token,36500);
     }
 
     url="https://api.github.com/users/"+user+"/repos?access_token="+token;
