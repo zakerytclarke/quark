@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Serif" rel="stylesheet">
+  <title>quark</title>
+  <style type="text/css" media="screen">
+  html{
+    background-color:#2B2B2D;
+    overflow: hidden;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-size:3vmin;
+    vertical-align:middle;
+    overflow-y:scroll;
+  }
+    body{
+      font-family: 'Orbitron', sans-serif;
+      background-color:#2B2B2D;
+      overflow: hidden;
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-size:3vmin;
+      vertical-align:middle;
+      color:#74C992;
+
+    }
+    ::-webkit-scrollbar {
+    display: none;
+    }
+
+    #editor {
+      position:absolute;
+      width:75vw;
+      right:0;
+      height:82vh;
+      font-size:3vmin;
+      display:none;
+    }
+    .file{
+      color:#74C992;
+      font-size:3.5vmin;
+      margin-top:0;
+    }
+    .link{
+      color:#74C992;
+      font-size:3.5vmin;
+      display:inline-block;
+      margin-left:10vmin;
+      cursor:pointer;
+    }
+    a{
+      text-decoration:none;
+    }
+    a:visited{
+        color:#74C992;
+    }
+    #login input{
+      border-radius:10vmin;
+      padding:1vmin;
+      background-color:#727a87;
+      border:3px #313c47 solid;
+      margin-top:3vmin;
+      font-size:5vmin;
+      color:#74C992;
+      padding-left:2vmin;
+      padding-right:2vmin;
+    }
+    input:focus {
+      outline:none;
+    }
+    ::placeholder {
+    color:#74C992;
+    opacity:0.6;
+    }
+
+</style>
+</head>
+<body>
+<script src="https://dingojs.github.io/dingo.js/dingo.js"></script>
+<div style="width:100%;height:15vh;overflow-y:hidden;padding:1vmin;background-color:#111111;margin:0;top:0;left:0;">
+<h1 style="display:inline-block;margin-left:10vmin;">
+quark
+</h1>
+<span id="hidemenu" style="display:none;padding:0;margin:0;">
+<p class="link" onclick="gohome()">
+Open Repo
+</p>
+<p id="savebtn" class="link" onclick="savefile()">
+Save File
+</p>
+<a id="viewproject" href="" target="_blank">
+<p class="link">
+View Project
+</p>
+</a>
+<a id="viewgithub" href="" target="_blank">
+<p class="link">
+View Github
+</p>
+</a>
+<p class="link" onclick="logout()">
+Logout
+</p>
+</span>
+<span id="hidemenu1" style="display:none;">
+<!--
+<p class="link">
+New Repo
+</p>
+
+<p class="link" onclick="logout()">
+Logout
+</p>
+-->
+</span>
+</div>
+
+<div id="editor"></div>
+<div id="side" style="overflow:scroll;overflow-x:hidden;color:#74C992;display:none;box-sizing:border-box;width:25vw;height:82vh;top:15vh;left:0;background-color:#242426;padding:1vmin;padding-left:5vmin;">
+<h1 id="repotitle">
+Title
+</h1>
+<div id="sidebar">
+</div>
+</div>
+
+
+<div id="login" style="width:60vw;min-height:60vh;margin-top:5vh;margin-left:20vw;text-align:center;background-color:#3d3b3f;padding:3vmin;border-radius:10vmin;">
+<h1>
+Login Using Github
+</h1>
+<input type="text" id="userin" placeholder="Username"><br>
+<input type="text" id="patin" placeholder="Personal Access Token"><br>
+<p style="color:#74C992;">
+<a target="_blank" href="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/">
+How do I get a personal access token?
+</p>
+</a>
+<p><input id="remember" type="checkbox" checked>
+Remember Me
+</p>
+<h1 style="margin-top:2vmin;border:1px #74C992 solid;border-radius:10vmin;width:20vw;padding-top:5px;padding-bottom:5px;margin-left:20vw" onclick="login()">
+Login
+</h1>
+</div>
+
+
+<div id="error" style="display:none;width:60vw;min-height:60vh;margin-top:5vh;margin-left:20vw;text-align:center;background-color:#3d3b3f;padding:3vmin;border-radius:10vmin;">
+<h1>
+Error
+</h1>
+<p id="errormsg">
+No Error Was Given
+</p>
+</div>
+
+<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.session.setMode("ace/mode/javascript");
+</script>
+<script>
+if(getCookie("user")!=null&&getCookie("token")!=null){
+  url="https://api.github.com/users/"+user+"/repos?access_token="+token;
+  gituser.open("GET",url,true);
+  gituser.send();
+
+  document.getElementById("login").style.display="none";
+  document.getElementById("home").style.display="block";
+}
+
+function login(){
+  if(document.getElementById("userin").value==null||document.getElementById("userin").value==""){
+    document.getElementById("userin").style.border="3px #ff5538 solid";
+  }else{
+    document.getElementById("userin").style.border="3px #313c47 solid";
+    user=document.getElementById("userin").value;
+  }
+  if(document.getElementById("patin").value==null||document.getElementById("patin").value==""){
+    document.getElementById("patin").style.border="3px #ff5538 solid";
+  }else{
+    document.getElementById("patin").style.border="3px #313c47 solid";
+    token=document.getElementById("patin").value;
+  }
+  if(document.getElementById("userin").value==null||document.getElementById("userin").value==""||document.getElementById("patin").value==null||document.getElementById("patin").value==""){
+
+  }else{
+    if(document.getElementById("remember").checked){
+      setCookie("user",user);
+      setCookie("token",token);
+    }else{
+      setCookie("user",user);
+      setCookie("token",token);
+    }
+
+    url="https://api.github.com/users/"+user+"/repos?access_token="+token;
+    gituser.open("GET",url,true);
+    gituser.send();
+    document.getElementById("login").style.display="none";
+    document.getElementById("home").style.display="block";
+  }
+
+}
+function logout(){
+  deleteCookie("user");
+  deleteCookie("token");
+  document.getElementById("login").style.display="block";
+  document.getElementById("editor").style.display="none";
+  document.getElementById("side").style.display="none";
+  document.getElementById("hidemenu").style.display="none";
+  document.getElementById("hidemenu1").style.display="none";
+  document.getElementById("home").style.display="none";
+}
+
+function deleteCookie(name, path, domain) {
+  // If the cookie exists
+  if (getCookie(name))
+    createCookie(name, "", -1, path, domain);
+}
+function setCookie(name, value, expires, path, domain) {
+  var cookie = name + "=" + escape(value) + ";";
+
+  if (expires) {
+    // If it's a date
+    if(expires instanceof Date) {
+      // If it isn't a valid date
+      if (isNaN(expires.getTime()))
+       expires = new Date();
+    }
+    else
+      expires = new Date(new Date().getTime() + parseInt(expires) * 1000 * 60 * 60 * 24);
+
+    cookie += "expires=" + expires.toGMTString() + ";";
+  }
+
+  if (path)
+    cookie += "path=" + path + ";";
+  if (domain)
+    cookie += "domain=" + domain + ";";
+
+  document.cookie = cookie;
+}
+
+function getCookie(name) {
+  var regexp = new RegExp("(?:^" + name + "|;\s*"+ name + ")=(.*?)(?:;|$)", "g");
+  var result = regexp.exec(document.cookie);
+  return (result === null) ? null : result[1];
+}
+
+function gohome(){
+  document.getElementById("editor").style.display="none";
+  document.getElementById("side").style.display="none";
+  document.getElementById("hidemenu").style.display="none";
+  document.getElementById("hidemenu1").style.display="inline-block";
+  document.getElementById("home").style.display="block";
+}
+function error(msg){
+  if(msg!=""&&msg!="OK"){
+    document.getElementById("errormsg").innerHTML=msg;
+    document.getElementById("editor").style.display="none";
+    document.getElementById("side").style.display="none";
+    document.getElementById("hidemenu").style.display="none";
+    document.getElementById("hidemenu1").style.display="none";
+    //document.getElementById("home").style.display="none";
+    document.getElementById("login").style.display="none";
+    document.getElementById("error").style.display="block";
+
+  }
+
+}
+var ftmap={
+  "js":"javascript",
+  "html":"html",
+  "php":"php",
+  "css":"css",
+  "txt":"text",
+  "json":"json",
+  "bas":"basic",
+  "md":"markdown"
+}
+var repo="";
+var url;
+var file="";
+var sha="";
+
+
+
+
+
+function savefile(){
+   var code=editor.getValue();
+   var msg=btoa(code);
+   var data={"path":file,"message":"Updated From quark editor.","content":msg,"sha":sha};
+   var url="https://api.github.com/repos/"+user+"/"+repo+"/contents/"+file+"?access_token="+token;
+
+   filesave.open("PUT",url,true);
+   filesave.send(JSON.stringify(data));
+
+}
+var filesave=new XMLHttpRequest();
+filesave.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   document.getElementById("savebtn").innerHTML="Saved";
+   setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
+ }else{
+   error(this.statusText);
+ }
+};
+
+
+function loadfile(file){
+  var ext=file.substr(file.indexOf(".")+1);
+  if(ext in ftmap){
+    url="https://api.github.com/repos/"+user+"/"+repo+"/contents/"+file;
+    editor.session.setMode("ace/mode/"+ftmap[ext]);
+    gitfile.open("GET",url,true);
+    gitfile.send();
+  }else{
+    window.open("https://github.com/"+user+"/"+repo+"/blob/master/"+file, '_blank');
+  }
+}
+var gitfile=new XMLHttpRequest();
+
+gitfile.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   var filetxt=JSON.parse(this.responseText);
+   editor.session.setValue(atob(filetxt["content"]));
+   sha=filetxt["sha"];
+   file=filetxt["name"];
+ }else{
+    error(this.statusText);
+ }
+};
+var gituser=new XMLHttpRequest();
+
+var repos;
+gituser.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   repos=JSON.parse(this.responseText);
+   init();
+ }else{
+  error(this.statusText);
+ }
+};
+
+
+var home=addelem("div",{id:"home",style:{display:"none",width:"100%"}});
+//Editor vars
+var repo;
+var file;
+
+function init(){
+  for(var i=0;i<repos.length;i++){
+    gitbox(i,repos);
+  }
+}
+
+
+
+
+
+function gitbox(i,arr){
+   var elemref=home.addchild("div",{parent:"home",style:{cursor:"pointer",overflow:"hidden","background-color":"#3d3b3f",color:"#74C992",display:"inline-block","padding-left":"1%",width:"30%","text-align":"left","font-size":"4vmin","border-radius":"15px",margin:"1%","vertical-align":"middle",height:"35vh"}});
+   elemref.addchild("p",{innerHTML:"<u><span style='font-size:5vmin;color:#74C992;'>"+arr[i]["name"]+"</span></u>"})
+   elemref.name=arr[i]["name"];
+   var private;
+   if(arr[i]["private"]){
+     private="Private";
+   }else{
+     private="Public";
+   }
+   var lang=arr[i]["language"];
+   if(arr[i]["language"]==null){
+     lang="";
+   }
+  elemref.addchild("p",{innerHTML:"<span style='color:#69c68a;'>"+"Stars:"+arr[i]["stargazers_count"]+"<br>"+"Watching:"+arr[i]["watchers_count"]+"<br>"+private+"<br>"+lang+"</span><br>",style:{width:"49%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
+
+ elemref.addchild("img",{src:"https://zakerytclarke.github.io/github.gif",style:{height:"20vh","border-radius":"50%","margin-top":"0","vertical-align":"top"}});
+ //elemref.addchild("img",{src:arr[i]["avatar_url"],style:{width:"50%","border-radius":"50%"}});
+
+ //elemref.desc=elemref.addchild("p",{innerHTML:arr[i]["description"],style:{position:"absolute",width:"30%","background-color":"red","border-radius":"15px",height:"35vh",display:"none"}});
+ elemref.onclick=function(){
+    home.style.display="none";
+    document.getElementById("hidemenu").style.display="inline-block";
+    document.getElementById("hidemenu1").style.display="none";
+    document.getElementById("editor").style.display="block";
+    document.getElementById("side").style.display="block";
+    repo=elemref.name;
+    document.getElementById("repotitle").innerHTML=repo;
+    url="https://api.github.com/repos/"+user+"/"+repo+"/contents/?access_token="+token;
+    document.getElementById("viewproject").href="https://"+user+".github.io/"+repo;
+    document.getElementById("viewgithub").href="https://github.com/"+user+"/"+repo;
+    gitrepo.open("GET",url,true);
+    gitrepo.send();
+
+  }
+
+  var gitrepo=new XMLHttpRequest();
+
+  gitrepo.onreadystatechange=function(){
+   if(this.readyState==4&&this.status==200){
+     var files=JSON.parse(this.responseText);
+     document.getElementById("repotitle").innerHTML=repo;
+     document.getElementById("sidebar").innerHTML="";
+     for(var i=0;i<files.length;i++){
+       document.getElementById("sidebar").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
+     }
+     editor.session.setValue("");
+   }else{
+     error(this.statusText);
+   }
+  };
+
+
+
+
+
+
+}
+
+</script>
+</body>
+</html>
