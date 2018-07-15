@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Serif" rel="stylesheet">
   <title>quark</title>
   <style type="text/css" media="screen">
+  @import url("http://cdnjs.cloudflare.com/ajax/libs/octicons/3.1.0/octicons.css");
   html{
     background-color:#2B2B2D;
     overflow: hidden;
@@ -470,6 +471,7 @@ function gitbox(i,arr){
   }
    elemref.addchild("p",{innerHTML:"<u><span style='font-size:5vmin;color:#74C992;'>"+arr[i]["name"]+"</span></u>"})
    elemref.name=arr[i]["name"];
+/*
    var private;
    if(arr[i]["private"]){
      private="Private";
@@ -481,7 +483,7 @@ function gitbox(i,arr){
      lang="";
    }
   elemref.addchild("p",{innerHTML:"<span style='color:#69c68a;'>"+"Stars:"+arr[i]["stargazers_count"]+"<br>"+"Watching:"+arr[i]["watchers_count"]+"<br>"+private+"<br>"+lang+"</span><br>",style:{width:"49%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
-
+*/
 /*
  var imgloader=elemref.addchild("img",{src:"github.gif",style:{height:"20vh","border-radius":"50%","margin-top":"0","vertical-align":"top"}});
  var imgurl="https://raw.githubusercontent.com/"+user+"/"+arr[i]["name"]+"/master/"+"logo.jpg";
@@ -490,7 +492,26 @@ function gitbox(i,arr){
    imgloader.src=imgurl;
  }
 */
-elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"49%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
+var octicon=elemref.addchild("div",{style:{width:"100%"}});
+if(arr[i]["private"]){
+  octicon.addchild("span",{className:"octicon octicon-lock"});
+}
+if(arr[i]["fork"]){
+  octicon.addchild("span",{className:"octicon octicon-repo-forked"});
+}
+if(arr[i]["stargazers_count"]>0){
+  octicon.addchild("span",{className:"octicon octicon-star"});
+}
+if(arr[i]["watchers_count"]>0){
+  octicon.addchild("span",{className:"octicon octicon-eye"});
+}
+if(arr[i]["open_issues"]>0){
+  octicon.addchild("span",{className:"octicon octicon-tag"});
+}
+if(arr[i]["archived"]){
+  octicon.addchild("span",{className:"octicon octicon-archive"});
+}
+elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"100%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
 
  elemref.onclick=function(){
     home.style.display="none";
