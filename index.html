@@ -80,6 +80,13 @@
     opacity:0.6;
     }
 
+    #menumobile{
+      background-color:rgba(0,0,0,0.9);height:100vh;font-size:250%;position:fixed;display:none;border-radius:20px;top:15vw;right:-3vw;
+    }
+    #menubutton{
+      z-index:1000;display:none;background-color:rgba(0,0,0,0.7);width:13vw;height:13vw;border-radius:15px;position:absolute;top:1vw;;right:1vw;
+    }
+
 </style>
 </head>
 <body>
@@ -121,6 +128,44 @@ Logout
 -->
 </span>
 </div>
+
+
+
+
+<div id="menubutton" style="" onclick="menuclick();">
+<div id="menutop" style="position:absolute;background-color:#74C992;;width:80%;height:15%;border-radius:20px;top:15%;left:10%"></div>
+<div id="menumiddle" style="position:absolute;background-color:#74C992;width:60%;height:15%;border-radius:20px;top:40%;left:30%"></div>
+<div id="menubottom" style="position:absolute;background-color:#74C992;width:80%;height:15%;border-radius:20px;top:65%;left:10%"></div>
+</div>
+
+
+
+
+<div id="menumobile"  style="" class="container">
+  <p class="link" onclick="gohome()">
+  Open Repo
+</p><br>
+  <p id="savebtn" class="link" onclick="savefile()">
+  Save File
+</p><br>
+  <a id="viewproject" href="" target="_blank">
+  <p class="link">
+  View Project
+  </p>
+</a><br>
+  <a id="viewgithub" href="" target="_blank">
+  <p class="link">
+  View Github
+  </p>
+</a><br>
+  <p class="link" onclick="logout()">
+  Logout
+</p><br>
+</div>
+
+
+
+
 
 <div id="editor"></div>
 <div id="side" style="overflow:scroll;overflow-x:hidden;color:#74C992;display:none;box-sizing:border-box;width:25vw;height:82vh;top:15vh;left:0;background-color:#242426;padding:1vmin;padding-left:5vmin;">
@@ -181,6 +226,36 @@ if(getCookie("user")!=null&&getCookie("token")!=null){
   document.getElementById("login").style.display="none";
   document.getElementById("home").style.display="block";
 }
+
+var menu=0;
+function menuclick(){
+var top=document.getElementById("menutop");
+var middle=document.getElementById("menumiddle");
+var bottom=document.getElementById("menubottom");
+if(menu==0){
+  middle.style.display="none";
+  top.style.transform="rotate(45deg)";
+  bottom.style.transform="rotate(-45deg)";
+  top.style.top="40%";
+  bottom.style.top="40%";
+  menu=1;
+
+  document.getElementById("menumobile").style.display="block";
+}else{
+  middle.style.display="block";
+  top.style.transform="rotate(0deg)";
+  bottom.style.transform="rotate(0deg)";
+  top.style.top="15%";
+  bottom.style.top="65%";
+  menu=0;
+  document.getElementById("menumobile").style.display="none";
+}
+}
+
+
+
+
+
 function imageExists(image_url){
     var http = new XMLHttpRequest();
     http.open('HEAD',image_url,true);
@@ -223,6 +298,7 @@ function logout(){
   document.getElementById("editor").style.display="none";
   document.getElementById("side").style.display="none";
   document.getElementById("hidemenu").style.display="none";
+  document.getElementById("menubutton").style.display="none";
   document.getElementById("hidemenu1").style.display="none";
   document.getElementById("home").style.display="none";
 }
@@ -266,6 +342,7 @@ function gohome(){
   document.getElementById("editor").style.display="none";
   document.getElementById("side").style.display="none";
   document.getElementById("hidemenu").style.display="none";
+  document.getElementById("menubutton").style.display="none";
   document.getElementById("hidemenu1").style.display="inline-block";
   document.getElementById("home").style.display="block";
 }
@@ -275,6 +352,8 @@ function error(msg){
     document.getElementById("editor").style.display="none";
     document.getElementById("side").style.display="none";
     document.getElementById("hidemenu").style.display="none";
+
+    document.getElementById("menubutton").style.display="none";
     document.getElementById("hidemenu1").style.display="none";
     //document.getElementById("home").style.display="none";
     document.getElementById("login").style.display="none";
@@ -408,7 +487,12 @@ elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"49%",display
 
  elemref.onclick=function(){
     home.style.display="none";
-    document.getElementById("hidemenu").style.display="inline-block";
+    //document.getElementById("hidemenu").style.display="inline-block";
+    if(window.innerWidth<window.innerHeight){
+      document.getElementById("menubutton").style.display="block";
+    }else{
+      document.getElementById("hidemenu").style.display="block";
+    }
     document.getElementById("hidemenu1").style.display="none";
     document.getElementById("editor").style.display="block";
     document.getElementById("side").style.display="block";
