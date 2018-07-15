@@ -82,7 +82,7 @@
     }
 
     #menumobile{
-      z-index:1000;background-color:#3d3b3f;height:100vh;font-size:250%;position:fixed;display:none;border-radius:20px;top:15vw;right:-3vw;
+      z-index:1000;background-color:rgba(61,59,63,0.7);height:100vh;width:50%;font-size:250%;position:absolute;display:none;border-radius:20px;top:15vw;right:-3vw;
     }
     #menubutton{
       z-index:1000;display:none;background-color:rgba(0,0,0,0.7);width:13vw;height:13vw;border-radius:15px;position:absolute;top:1vw;;right:1vw;
@@ -96,19 +96,19 @@
 <h1 style="display:inline-block;margin-left:10vmin;">
 quark
 </h1>
-<span id="hidemenu" style="display:none;padding:0;margin:0;">
+<span id="hidemenu" style="display:block;padding:0;margin:0;z-index:100;">
 <p class="link" onclick="gohome()">
 Open Repo
 </p>
 <p id="savebtn" class="link" onclick="savefile()">
 Save File
 </p>
-<a id="viewproject" href="" target="_blank">
+<a id="viewproject1" href="" target="_blank">
 <p class="link">
 View Project
 </p>
 </a>
-<a id="viewgithub" href="" target="_blank">
+<a id="viewgithub1" href="" target="_blank">
 <p class="link">
 View Github
 </p>
@@ -348,6 +348,7 @@ function gohome(){
   document.getElementById("side").style.display="none";
   document.getElementById("hidemenu").style.display="none";
   document.getElementById("menubutton").style.display="none";
+  menuclick();
   document.getElementById("menumobile").style.display="none";
   document.getElementById("hidemenu1").style.display="inline-block";
   document.getElementById("home").style.display="block";
@@ -406,7 +407,7 @@ filesave.onreadystatechange=function(){
  if(this.readyState==4&&this.status==200){
    document.getElementById("savebtn").innerHTML="Saved";
    setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
-   loadfile();
+   loadfile(file);
  }else{
    error(this.statusText);
  }
@@ -497,7 +498,10 @@ function gitbox(i,arr){
    imgloader.src=imgurl;
  }
 */
-var octicon=elemref.addchild("div",{style:{width:"100%"}});
+elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"100%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
+
+
+var octicon=elemref.addchild("span",{style:{width:"100%"}});
 if(arr[i]["private"]){
   octicon.addchild("span",{className:"octicon octicon-lock"});
 }
@@ -516,7 +520,6 @@ if(arr[i]["open_issues"]>0){
 if(arr[i]["archived"]){
   octicon.addchild("span",{className:"octicon octicon-archive"});
 }
-elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"100%",display:"inline-block","vertical-align":"middle","margin-top":"0px"}});
 
  elemref.onclick=function(){
     home.style.display="none";
@@ -525,6 +528,7 @@ elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"100%",displa
       document.getElementById("menubutton").style.display="block";
     }else{
       document.getElementById("hidemenu").style.display="block";
+
     }
     document.getElementById("hidemenu1").style.display="none";
     document.getElementById("editor").style.display="block";
