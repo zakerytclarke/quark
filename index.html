@@ -351,6 +351,7 @@ function gohome(){
   document.getElementById("menumobile").style.display="none";
   document.getElementById("hidemenu1").style.display="inline-block";
   document.getElementById("home").style.display="block";
+  editor.session.setValue("");
 }
 function error(msg){
   if(msg!=""&&msg!="OK"){
@@ -466,6 +467,10 @@ function init(){
 function gitbox(i,arr){
   if(window.innerHeight>window.innerWidth){
     var elemref=home.addchild("div",{parent:"home",style:{cursor:"pointer",overflow:"hidden","background-color":"#3d3b3f",color:"#74C992",display:"inline-block","padding-left":"1%",width:"90%","text-align":"left","font-size":"4vmin","border-radius":"15px","margin-left":"10vw",margin:"1%","vertical-align":"middle",height:"35vh"}});
+
+    document.getElementById("editor").style.width="100vw";
+    document.getElementById("editor").style.left="0";
+
   }else{
     var elemref=home.addchild("div",{parent:"home",style:{cursor:"pointer",overflow:"hidden","background-color":"#3d3b3f",color:"#74C992",display:"inline-block","padding-left":"1%",width:"30%","text-align":"left","font-size":"4vmin","border-radius":"15px",margin:"1%","vertical-align":"middle",height:"35vh"}});
   }
@@ -517,7 +522,7 @@ elemref.addchild("p",{innerHTML:arr[i]["description"],style:{width:"100%",displa
     home.style.display="none";
     //document.getElementById("hidemenu").style.display="inline-block";
     if(window.innerWidth<window.innerHeight){
-      document.getElementById("").style.display="block";
+      document.getElementById("menubutton").style.display="block";
     }else{
       document.getElementById("hidemenu").style.display="block";
     }
