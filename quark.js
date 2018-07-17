@@ -130,7 +130,7 @@ function changestate(newstate){
   }
 }
 //if(getCookie("user")!=null&&getCookie("token")!=null){
-if(getCookie("user")!=null){
+if(getCookie("user")!=null&&getCookie("token")!=null){
   user=getCookie("user");
   token=getCookie("token");
   url="https://api.github.com/users/"+user+"/repos?access_token="+token;
