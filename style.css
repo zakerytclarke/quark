@@ -1,0 +1,102 @@
+@import url("http://cdnjs.cloudflare.com/ajax/libs/octicons/3.1.0/octicons.css");
+html{
+  background-color:#2B2B2D;
+  overflow: hidden;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-size:3vmin;
+  vertical-align:middle;
+  overflow-y:scroll;
+}
+body{
+  font-family: 'Orbitron', sans-serif;
+  background-color:#2B2B2D;
+  overflow: hidden;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-size:3vmin;
+  vertical-align:middle;
+  color:#74C992;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+#editor {
+  position:absolute;
+  width:75vw;
+  right:0;
+  height:82vh;
+  font-size:3vmin;
+  display:none;
+}
+.file{
+  color:#74C992;
+  font-size:3.5vmin;
+  margin-top:0;
+}
+.link{
+  color:#74C992;
+  font-size:3.5vmin;
+  display:inline-block;
+  margin-left:10vmin;
+  cursor:pointer;
+}
+a{
+  text-decoration:none;
+}
+a:visited{
+  color:#74C992;
+}
+#login input{
+  border-radius:10vmin;
+  padding:1vmin;
+  max-width:90%;
+  background-color:#8a909b;
+  border:3px #4a4f54 solid;
+  margin-top:3vmin;
+  font-size:5vmin;
+  color:#74C992;
+  padding-left:2vmin;
+  padding-right:2vmin;
+}
+input:focus {
+  outline:none;
+}
+::placeholder {
+color:#74C992;
+opacity:1;
+}
+.gitcont{
+  cursor:pointer;
+  overflow:hidden;
+  background-color:#3d3b3f;
+  display:inline-block;
+  padding-left:1%;
+  margin-left:10vw;
+  margin:1%;
+  vertical-align:middle;
+  height:35vh;
+  width:30%;
+  text-align:left;
+  font-size:4vmin;
+  border-radius:5vmin;
+}
+#menumobile{
+  z-index:1000;
+  background-color:rgba(61,59,63,0.9);
+  height:100vh;
+  width:70%;
+  font-size:250%;
+  position:absolute;
+  display:none;
+  border-radius:10vmin;
+  top:15vw;
+  right:-4vw;
+  padding-left:5vmin;
+  padding-right:5vmin;
+}
+#menubutton{
+  z-index:1000;display:none;background-color:rgba(61,59,63,0.8);width:13vw;height:13vw;border-radius:15px;position:absolute;top:1vw;;right:1vw;
+}
