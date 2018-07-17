@@ -1,5 +1,6 @@
 var state=0;
 var menu=0;
+var repos;
 var ftmap={
   "js":"javascript",
   "html":"html",
@@ -19,6 +20,73 @@ var token;
 
 
 changestate(0);
+
+
+
+
+//Ajax Declarations
+var gitfile=new XMLHttpRequest();
+
+gitfile.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   var filetxt=JSON.parse(this.responseText);
+   editor.session.setValue(atob(filetxt["content"]));
+   sha=filetxt["sha"];
+   file=filetxt["name"];
+ }else{
+    error(this.statusText);
+ }
+};
+var gituser=new XMLHttpRequest();
+
+gituser.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   repos=JSON.parse(this.responseText);
+   init();
+ }else{
+  error(this.statusText);
+ }
+};
+
+var filesave=new XMLHttpRequest();//Saves file to Github
+filesave.onreadystatechange=function(){
+  if(this.readyState==4&&this.status==200){
+    document.getElementById("savebtn").innerHTML="Saved";
+    setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
+    loadfile(file);
+  }else{
+    error(this.statusText);
+  }
+};
+
+
+var gitrepo=new XMLHttpRequest();
+
+gitrepo.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   var files=JSON.parse(this.responseText);
+   document.getElementById("repotitle").innerHTML=repo;
+   document.getElementById("sidebar").innerHTML="";
+    document.getElementById("mobilefile").innerHTML="";
+   for(var i=0;i<files.length;i++){
+     document.getElementById("sidebar").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
+     document.getElementById("mobilefile").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
+   }
+   editor.session.setValue("");
+   changestate(2)
+ }else{
+   error(this.statusText);
+ }
+};
+
+
+
+
+
+
+
+
+
 function changestate(newstate){
   state=newstate;
   //Hide all States
@@ -225,57 +293,3 @@ function loadfile(file){
     window.open("https://github.com/"+user+"/"+repo+"/blob/master/"+file, '_blank');
   }
 }
-var gitfile=new XMLHttpRequest();
-
-gitfile.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   var filetxt=JSON.parse(this.responseText);
-   editor.session.setValue(atob(filetxt["content"]));
-   sha=filetxt["sha"];
-   file=filetxt["name"];
- }else{
-    error(this.statusText);
- }
-};
-var gituser=new XMLHttpRequest();
-
-var repos;
-gituser.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   repos=JSON.parse(this.responseText);
-   init();
- }else{
-  error(this.statusText);
- }
-};
-
-var filesave=new XMLHttpRequest();//Saves file to Github
-filesave.onreadystatechange=function(){
-  if(this.readyState==4&&this.status==200){
-    document.getElementById("savebtn").innerHTML="Saved";
-    setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
-    loadfile(file);
-  }else{
-    error(this.statusText);
-  }
-};
-
-
-var gitrepo=new XMLHttpRequest();
-
-gitrepo.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   var files=JSON.parse(this.responseText);
-   document.getElementById("repotitle").innerHTML=repo;
-   document.getElementById("sidebar").innerHTML="";
-    document.getElementById("mobilefile").innerHTML="";
-   for(var i=0;i<files.length;i++){
-     document.getElementById("sidebar").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
-     document.getElementById("mobilefile").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
-   }
-   editor.session.setValue("");
-   changestate(2)
- }else{
-   error(this.statusText);
- }
-};
