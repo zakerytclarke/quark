@@ -1,124 +1,34 @@
 var state=0;
-var menu=0;
-var repos;
-var ftmap={
-  "js":"javascript",
-  "html":"html",
-  "php":"php",
-  "css":"css",
-  "txt":"text",
-  "json":"json",
-  "bas":"basic",
-  "md":"markdown"
-}
-var repo="";
-var url;
-var file="";
-var sha="";
-var user;
-var token;
-
-
 changestate(0);
-
-
-
-
-//Ajax Declarations
-var gitfile=new XMLHttpRequest();
-
-gitfile.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   var filetxt=JSON.parse(this.responseText);
-   editor.session.setValue(atob(filetxt["content"]));
-
-   sha=filetxt["sha"];
-   file=filetxt["name"];
- }else{
-    error(this.statusText);
- }
-};
-var gituser=new XMLHttpRequest();
-
-gituser.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   repos=JSON.parse(this.responseText);
-   init();
- }else{
-  error(this.statusText);
- }
-};
-
-var filesave=new XMLHttpRequest();//Saves file to Github
-filesave.onreadystatechange=function(){
-  if(this.readyState==4&&this.status==200){
-    document.getElementById("savebtn").innerHTML="Saved";
-    setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
-  }else{
-    error(this.statusText);
-  }
-};
-
-
-var gitrepo=new XMLHttpRequest();
-
-gitrepo.onreadystatechange=function(){
- if(this.readyState==4&&this.status==200){
-   var files=JSON.parse(this.responseText);
-   for(var i=0;i<files.length;i++){
-      if(files[i].name=="README.md"){
-        loadfile("README.md");
-      }
-   }
-   document.getElementById("repotitle").innerHTML=repo;
-   document.getElementById("sidebar").innerHTML="";
-    document.getElementById("mobilefile").innerHTML="";
-   for(var i=0;i<files.length;i++){
-     document.getElementById("sidebar").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
-     document.getElementById("mobilefile").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
-   }
-   editor.session.setValue("");
-   changestate(2)
- }else{
-   error(this.statusText);
- }
-};
-
-
-
 function changestate(newstate){
   state=newstate;
   //Hide all States
   document.getElementById("login").style.display="none";
   document.getElementById("editor").style.display="none";
   document.getElementById("side").style.display="none";
-  document.getElementById("editmenu").style.display="none";
-  document.getElementById("homemenu").style.display="none";
+  document.getElementById("hidemenu").style.display="none";
   document.getElementById("menubutton").style.display="none";
   document.getElementById("menumobile").style.display="none";
   document.getElementById("home").style.display="none";
-  document.getElementById("settings").style.display="none";
   document.getElementById("error").style.display="none";
   switch(state){
     case 0://Login
       document.getElementById("login").style.display="block";
     break;
     case 1://Repos
-      document.getElementById("home").style.display="block";
-      document.getElementById("homemenu").style.display="inline-block";
+      document.getElementById("editor").style.display="home";
     break;
     case 2://Editor
       document.getElementById("editor").style.display="block";
       document.getElementById("side").style.display="block";
-      //document.getElementById("editmenu").style.display="inline-block";
       if(window.innerHeight>window.innerWidth){
         document.getElementById("menubutton").style.display="block";
       }else{
-        document.getElementById("editmenu").style.display="inline-block";
+        document.getElementById("hidemenu").style.display="block";
       }
     break;
     case 3://Settings
-      document.getElementById("settings").style.display="block";
+
     break;
     case 4://Error
       document.getElementById("error").style.display="block";
@@ -127,37 +37,19 @@ function changestate(newstate){
     state=0;
   }
 }
-if(getCookie("user")!=null&&getCookie("token")!=null){
+//if(getCookie("user")!=null&&getCookie("token")!=null){
+if(getCookie("user")!=null){
   user=getCookie("user");
   token=getCookie("token");
   url="https://api.github.com/users/"+user+"/repos?access_token="+token;
   gituser.open("GET",url,true);
   gituser.send();
-  changestate(1);
+
+  document.getElementById("login").style.display="none";
+  document.getElementById("home").style.display="block";
 }
 
-function init(){
-  var home=document.getElementById("home");
-  home.innerHTML="";
-  for(var i=0;i<repos.length;i++){
-    home.innerHTML+="<div onclick='gitload(&quot;"+repos[i]["name"]+"&quot;);' class='gitcont'><u><h2>"+repos[i]["name"]+"</h2></u><p>"+repos[i]["description"]+"</p></div>"
-  }
-}
-
-
-function gitload(name){
-  repo=name;
-  document.getElementById("repotitle").innerHTML=repo;
-  url="https://api.github.com/repos/"+user+"/"+repo+"/contents/?access_token="+token;
-  document.getElementById("viewproject").href="https://"+user+".github.io/"+repo;
-  document.getElementById("viewgithub").href="https://github.com/"+user+"/"+repo;
-  document.getElementById("viewproject1").href="https://"+user+".github.io/"+repo;
-  document.getElementById("viewgithub1").href="https://github.com/"+user+"/"+repo;
-  gitrepo.open("GET",url,true);
-  gitrepo.send();
-}
-
-
+var menu=0;
 function menuclick(){
 var top=document.getElementById("menutop");
 var middle=document.getElementById("menumiddle");
@@ -181,6 +73,9 @@ if(menu==0){
   document.getElementById("menumobile").style.display="none";
 }
 }
+
+
+
 
 function imageExists(image_url){
     var http = new XMLHttpRequest();
@@ -212,7 +107,8 @@ function login(){
     url="https://api.github.com/users/"+user+"/repos?access_token="+token;
     gituser.open("GET",url,true);
     gituser.send();
-    changestate(1);
+    document.getElementById("login").style.display="none";
+    document.getElementById("home").style.display="block";
   }
 
 }
@@ -259,7 +155,7 @@ function getCookie(name) {
 
 function gohome(){
   changestate(1);
-  menu=0;
+  menuclick();
   editor.session.setValue("");
 }
 function error(msg){
@@ -268,6 +164,25 @@ function error(msg){
     changestate(4);
   }
 }
+var ftmap={
+  "js":"javascript",
+  "html":"html",
+  "php":"php",
+  "css":"css",
+  "txt":"text",
+  "json":"json",
+  "bas":"basic",
+  "md":"markdown"
+}
+var repo="";
+var url;
+var file="";
+var sha="";
+var user;
+var token;
+
+
+
 
 function savefile(){
    var code=editor.getValue();
@@ -279,6 +194,16 @@ function savefile(){
    filesave.send(JSON.stringify(data));
 
 }
+var filesave=new XMLHttpRequest();
+filesave.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   document.getElementById("savebtn").innerHTML="Saved";
+   setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
+   loadfile(file);
+ }else{
+   error(this.statusText);
+ }
+};
 
 
 function loadfile(file){
@@ -292,9 +217,69 @@ function loadfile(file){
     window.open("https://github.com/"+user+"/"+repo+"/blob/master/"+file, '_blank');
   }
 }
+var gitfile=new XMLHttpRequest();
+
+gitfile.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   var filetxt=JSON.parse(this.responseText);
+   editor.session.setValue(atob(filetxt["content"]));
+   sha=filetxt["sha"];
+   file=filetxt["name"];
+ }else{
+    error(this.statusText);
+ }
+};
+var gituser=new XMLHttpRequest();
+
+var repos;
+gituser.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   repos=JSON.parse(this.responseText);
+   init();
+ }else{
+  error(this.statusText);
+ }
+};
 
 
-function savesettings(){
-  editor.setTheme("ace/theme/"+document.getElementById("theme").value);
-  changestate(1);
+//Editor vars
+var repo;
+var file;
+
+function init(){
+  var home=document.getElementById("home");
+  home.innerHTML="";
+  for(var i=0;i<repos.length;i++){
+    home.innerHTML+="<div onclick='gitload(&quot;"+repos[i]["name"]+"&quot;);' class='gitcont'><u><h2>"+repos[i]["name"]+"</h2></u><p>"+repos[i]["description"]+"</p></div>"
+  }
 }
+
+
+function gitload(name){
+  repo=name;
+  document.getElementById("repotitle").innerHTML=repo;
+  url="https://api.github.com/repos/"+user+"/"+repo+"/contents/?access_token="+token;
+  document.getElementById("viewproject").href="https://"+user+".github.io/"+repo;
+  document.getElementById("viewgithub").href="https://github.com/"+user+"/"+repo;
+  gitrepo.open("GET",url,true);
+  gitrepo.send();
+}
+
+  var gitrepo=new XMLHttpRequest();
+
+  gitrepo.onreadystatechange=function(){
+   if(this.readyState==4&&this.status==200){
+     var files=JSON.parse(this.responseText);
+     document.getElementById("repotitle").innerHTML=repo;
+     document.getElementById("sidebar").innerHTML="";
+      document.getElementById("mobilefile").innerHTML="";
+     for(var i=0;i<files.length;i++){
+       document.getElementById("sidebar").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
+       document.getElementById("mobilefile").innerHTML+="<p onclick='loadfile(&quot;"+files[i]["name"]+"&quot);' class='file'>&gt;"+files[i]["name"]+"</p><br>";
+     }
+     editor.session.setValue("");
+     changestate(2)
+   }else{
+     error(this.statusText);
+   }
+  };

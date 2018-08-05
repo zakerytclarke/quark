@@ -45,6 +45,12 @@ New Repo
 Clone Repo
 </p>
 </a>
+<!--
+<p class="link" onclick="changestate(3);">
+Settings
+</p>
+-->
+
 <p class="link" onclick="logout()">
 Logout
 </p>
@@ -120,6 +126,45 @@ Remember Me
 <h1 style="margin-top:2vmin;border:1px #74C992 solid;border-radius:10vmin;width:20vw;padding-top:5px;padding-bottom:5px;margin-left:20vw" onclick="login()">
 Login
 </h1>
+</div>
+
+<div id="settings" style="display:none;width:60vw;min-height:60vh;margin-top:5vh;margin-left:20vw;text-align:center;background-color:#3d3b3f;padding:3vmin;border-radius:10vmin;">
+<h1>
+Settings
+</h1>
+<select id="theme">
+<option value="chrome">Chrome</option>
+<option value="clouds">Clouds</option>
+<option value="clouds_midnight">Clouds Midnight</option>
+<option value="cobalt">Cobalt</option>
+<option value="crimson_editor">Crimson Editor</option>
+<option value="dawn">Dawn</option>
+<option value="eclipse">Eclipse</option>
+<option value="idle_fingers">Idle Finegrs</option>
+<option value="kr_theme">Kr Theme</option>
+<option value="merbivore">Merbivore</option>
+<option value="merbivore_soft">Merbivore Soft</option>
+<option value="mono_industrial">Mono Industrial</option>
+<option value="monokai">Monokai</option>
+<option value="pastel_on_dark">Pastel On Dark</option>
+<option value="solarized_dark">Solarized Dark</option>
+<option value="solarized_light">Solarized Light</option>
+<option value="textmate">TextMate</option>
+<option value="tomorrow">Tomorrow</option>
+<option value="tomorrow_night">Tomorrow Night</option>
+<option value="tomorrow_night_blue">Tomorrow Night Blue</option>
+<option value="tomorrow_night_bright">Tomorrow Night Bright</option>
+<option value="tomorrow_night_eighties">Tomorrow Night Eighties</option>
+<option selected value="twilight">Twilight</option>
+<option value="vibrant_ink">Vibrant Ink</option>
+
+</select><br>
+<label>Font-Size<br>
+<input type="range" min="1" max="7" value="3">
+</label>
+<p style="font-size:4vmin;" onclick="savesettings();">
+Save Settings
+</p>
 </div>
 
 
