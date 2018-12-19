@@ -23,8 +23,17 @@ changestate(0);
 
 
 
+var gitsha=new XMLHttpRequest();
 
-//Ajax Declarations
+gitsha.onreadystatechange=function(){
+ if(this.readyState==4&&this.status==200){
+   var filetxt=JSON.parse(this.responseText);
+   sha=filetxt["sha"];
+ }else{
+    error(this.statusText);
+ }
+};
+
 var gitfile=new XMLHttpRequest();
 
 gitfile.onreadystatechange=function(){
@@ -54,6 +63,10 @@ filesave.onreadystatechange=function(){
   if(this.readyState==4&&this.status==200){
     document.getElementById("savebtn").innerHTML="Saved";
     setTimeout(function(){document.getElementById("savebtn").innerHTML="Save File";},3000);
+    var url="https://api.github.com/repos/"+user+"/"+repo+"/git/refs/heads/master"+"?access_token="+token;
+    gitsha.open("GET",url,true);
+    gitsha.send();
+
   }else{
     error(this.statusText);
   }
@@ -277,6 +290,7 @@ function savefile(){
 
    filesave.open("PUT",url,true);
    filesave.send(JSON.stringify(data));
+
 
 }
 
